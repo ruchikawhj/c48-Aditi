@@ -23,7 +23,7 @@ function preload() {
   bulletImg = loadImage("assets/bullet.png");
   startImg = loadImage("assets/start.png");
   jumpSound = loadSound("sounds/jump.mp3");
-  // bgSound = loadSound("sounds/bgSound.mp3");
+   bgSound = loadSound("sounds/mario.mp3");
   dieSound = loadSound("sounds/die.mp3");
   coinSound = loadSound("sounds/coin.mp3");
   //shootSound = loadSound("assets/sounds/shoot.mp3");*/
@@ -52,8 +52,9 @@ function setup() {
   coinGroup = new Group();
   obstaclesGroup = new Group()
   bulletGroup = new Group()
-  // bgSound.loop();
-  // bgSound.setVolume(0.5)
+   bgSound.play();
+   bgSound.loop();
+   bgSound.setVolume(0.5)
 }
 
 function draw() {
@@ -81,7 +82,7 @@ function draw() {
       start.visible = true;
       if (mousePressedOver(start)) {
         gameState = 1;
-        slide=0;
+        slide = 0;
         start.visible = false;
         mario.visible = true;
       }
@@ -121,15 +122,15 @@ function draw() {
     }
     for (var j = 0; j < obstaclesGroup.length; j++) {
       if (obstaclesGroup.get(j).isTouching(mario)) {
-       
+
         obstaclesGroup.get(j).destroy();
-        
+
         lifeOver();
-       dieSound.play();
+        dieSound.play();
       }
     }
 
-    
+
     spawnClouds();
     spawnObstacle1();
     spawnCoins();
@@ -157,6 +158,9 @@ function draw() {
     cloudsGroup.setLifetimeEach(-1);
 
     ground.velocityX = 0;
+  }
+  if (gameState === 4) {
+    text("Press r to continue", width / 2 - 175, height / 2 + 100)
   }
 
   drawSprites();
@@ -245,6 +249,14 @@ function keyReleased() {
       slide++;
     }
   }
+
+  if (keyDown("r") && gameState == 4) {
+
+    gameState = 1;
+    obstaclesGroup.destroyEach();
+    coinGroup.destroyEach();
+    cloudsGroup.destroyEach();
+  }
 }
 
 function lifeOver() {
@@ -253,7 +265,7 @@ function lifeOver() {
     gameState = 2;
   }
   else {
-    gameState=4;
+    gameState = 4;
     mario.velocityY = 0;
     obstaclesGroup.setVelocityXEach(0);
     obstaclesGroup.setLifetimeEach(-1);
@@ -266,17 +278,6 @@ function lifeOver() {
     fill("white");
     stroke("black");
     strokeWeight(2);
-    if(slide===0){
-   text("Press r to continue", width / 2 - 175, height / 2 + 100)
-  
-    }
-    if (keyDown("r")) {
-      slide=5;
-      gameState = 1;
-      obstaclesGroup.destroyEach();
-      coinGroup.destroyEach();
-      cloudsGroup.destroyEach();
-    }
-
+   
   }
 }
